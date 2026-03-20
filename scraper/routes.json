@@ -1,0 +1,22 @@
+[
+  { "from": "DEL", "to": "JFK", "cabin": "business" },
+  { "from": "DEL", "to": "LHR", "cabin": "business" },
+  { "from": "DEL", "to": "SIN", "cabin": "business" },
+  { "from": "DEL", "to": "DXB", "cabin": "business" },
+  { "from": "DEL", "to": "FRA", "cabin": "business" },
+  { "from": "DEL", "to": "NRT", "cabin": "business" },
+  { "from": "DEL", "to": "SFO", "cabin": "business" },
+  { "from": "DEL", "to": "YYZ", "cabin": "business" },
+  { "from": "DEL", "to": "BKK", "cabin": "business" },
+  { "from": "DEL", "to": "SYD", "cabin": "business" },
+  { "from": "BOM", "to": "JFK", "cabin": "business" },
+  { "from": "BOM", "to": "LHR", "cabin": "business" },
+  { "from": "BOM", "to": "SIN", "cabin": "business" },
+  { "from": "BOM", "to": "DXB", "cabin": "business" },
+  { "from": "BOM", "to": "FRA", "cabin": "business" },
+  { "from": "BOM", "to": "SFO", "cabin": "business" },
+  { "from": "BLR", "to": "JFK", "cabin": "business" },
+  { "from": "BLR", "to": "LHR", "cabin": "business" },
+  { "from": "BLR", "to": "SIN", "cabin": "business" },
+  { "from": "BLR", "to": "SFO", "cabin": "business" }
+]
