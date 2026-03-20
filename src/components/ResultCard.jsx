@@ -2,9 +2,9 @@ import { PG, BK } from "../data/programs.js";
 import { gX, fmt, fD } from "../utils/calc.js";
 import { useMediaQuery } from "../hooks/useMediaQuery.js";
 
-export default function ResultCard({ rt, idx, isExpanded, onToggle }) {
+export default function ResultCard({ rt, idx, isExpanded, onToggle, cards }) {
   const isMobile = useMediaQuery("(max-width: 768px)");
-  const xf = gX(rt.program, rt.miles);
+  const xf = cards ? gX(rt.program, rt.miles, cards) : gX(rt.program, rt.miles);
   const bst = xf[0];
   const bkL = BK[rt.program];
 

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { ALLIANCES, PG } from "../data/programs.js";
-import { CARDS } from "../data/cards.js";
+import { CARDS as DEFAULT_CARDS } from "../data/cards.js";
 
-export default function Filters({ fSt, setFSt, fAv, setFAv, sort, setSort, sCards, setSCards, fAlliance, setFAlliance, fPrograms, setFPrograms }) {
+export default function Filters({ fSt, setFSt, fAv, setFAv, sort, setSort, sCards, setSCards, fAlliance, setFAlliance, fPrograms, setFPrograms, cards }) {
+  const CARDS = cards || DEFAULT_CARDS;
   const [shC, setShC] = useState(false);
   const [shP, setShP] = useState(false);
 

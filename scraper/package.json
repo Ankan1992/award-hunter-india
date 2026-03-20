@@ -4,9 +4,11 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "scrape": "node index.js"
+    "scrape": "node index.js",
+    "ratios": "node ratios.js"
   },
   "dependencies": {
+    "cheerio": "^1.0.0",
     "playwright": "^1.50.0"
   }
 }

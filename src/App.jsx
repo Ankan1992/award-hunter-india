@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { CABINS, MONTHS, PG } from "./data/programs.js";
-import { CARDS, CARDS_LAST_UPDATED } from "./data/cards.js";
+import { CARDS, CARDS_LAST_UPDATED, fetchCards } from "./data/cards.js";
 import { AIRPORTS } from "./data/airports.js";
 import { genR, genD, gX, fmt } from "./utils/calc.js";
 import { searchAwards } from "./utils/api.js";
@@ -35,8 +35,18 @@ export default function App() {
   const [fPrograms, setFPrograms] = useState([]);
   const [showPrefs, setShowPrefs] = useState(false);
   const [scrapedAt, setScrapedAt] = useState(null);
+  const [cards, setCards] = useState(CARDS);
+  const [cardsUpdated, setCardsUpdated] = useState(CARDS_LAST_UPDATED);
 
   const { prefs, updatePrefs, clearPrefs, hasPrefs } = usePreferences();
+
+  // Load dynamic card transfer ratios on mount
+  useEffect(() => {
+    fetchCards("/data/cards.json").then(data => {
+      if (data.cards?.length) setCards(data.cards);
+      if (data.lastUpdated) setCardsUpdated(data.lastUpdated);
+    });
+  }, []);
 
   // Apply saved preferences on mount
   useEffect(() => {
@@ -67,13 +77,13 @@ export default function App() {
     if (fPrograms.length) r = r.filter(x => fPrograms.includes(x.program));
     if (fSt !== "all") r = r.filter(x => x.stops === +fSt);
     if (fAv === "available") r = r.filter(x => x.avail === "available");
-    if (sCards.length) r = r.filter(x => gX(x.program, x.miles).some(t => sCards.includes(t.cid)));
+    if (sCards.length) r = r.filter(x => gX(x.program, x.miles, cards).some(t => sCards.includes(t.cid)));
     if (sort === "miles") r.sort((a, b) => a.miles - b.miles);
     else if (sort === "taxes") r.sort((a, b) => a.taxes - b.taxes);
     else if (sort === "duration") r.sort((a, b) => a.dur - b.dur);
     else r.sort((a, b) => (a.miles + a.taxes * 2) - (b.miles + b.taxes * 2));
     return r;
-  }, [res, fSt, fAv, sort, sCards, fAlliance, fPrograms]);
+  }, [res, fSt, fAv, sort, sCards, fAlliance, fPrograms, cards]);
 
   const stats = useMemo(() => {
     if (!res?.length) return null;
@@ -92,7 +102,7 @@ export default function App() {
     setAlEmail(""); setAlThresh(""); setShAlF(false);
   };
 
-  const lastUpdated = new Date(CARDS_LAST_UPDATED).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
+  const lastUpdated = new Date(cardsUpdated).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 
   return (
     <div style={{ fontFamily: "'Segoe UI',system-ui,sans-serif", background: "#0a0e17", minHeight: "100vh", color: "#e2e8f0" }}>
@@ -169,7 +179,7 @@ export default function App() {
           {/* Results */}
           {tab === "results" && <>
             <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: "#64748b", marginBottom: 8 }}>Filter Results</div>
-            <Filters fSt={fSt} setFSt={setFSt} fAv={fAv} setFAv={setFAv} sort={sort} setSort={setSort} sCards={sCards} setSCards={setSCards} fAlliance={fAlliance} setFAlliance={setFAlliance} fPrograms={fPrograms} setFPrograms={setFPrograms} />
+            <Filters fSt={fSt} setFSt={setFSt} fAv={fAv} setFAv={setFAv} sort={sort} setSort={setSort} sCards={sCards} setSCards={setSCards} fAlliance={fAlliance} setFAlliance={setFAlliance} fPrograms={fPrograms} setFPrograms={setFPrograms} cards={cards} />
 
             <div style={{ fontSize: 13, color: "#64748b", marginBottom: 14 }}>
               <strong style={{ color: "#e2e8f0" }}>{filtered.length}</strong> for <strong style={{ color: "#f59e0b" }}>{fc} {"\u2192"} {tc}</strong> {"\u00B7"} {CABINS.find(c => c.id === cab)?.label} {"\u00B7"} {mo} {yr}
@@ -183,7 +193,7 @@ export default function App() {
             <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: ".12em", color: "#64748b", marginBottom: 8 }}>Award Options</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {filtered.length === 0 && <div style={{ textAlign: "center", padding: 30, color: "#64748b" }}>No results match filters.</div>}
-              {filtered.map((rt, idx) => <ResultCard key={rt.id} rt={rt} idx={idx} isExpanded={exp === rt.id} onToggle={() => setExp(exp === rt.id ? null : rt.id)} />)}
+              {filtered.map((rt, idx) => <ResultCard key={rt.id} rt={rt} idx={idx} isExpanded={exp === rt.id} onToggle={() => setExp(exp === rt.id ? null : rt.id)} cards={cards} />)}
             </div>
 
             <div style={{ marginTop: 24, padding: 16, background: "#111827", borderRadius: 10, border: "1px solid #1e293b", fontSize: 10, color: "#64748b", lineHeight: 1.5 }}>
@@ -203,8 +213,8 @@ export default function App() {
           <h2 style={{ fontSize: 18, fontWeight: 600, marginBottom: 6 }}>Find Your Best Award Redemption</h2>
           <p style={{ fontSize: 13, color: "#64748b", maxWidth: 440, margin: "0 auto", lineHeight: 1.5 }}>Data from PointsYeah, AwardFares & Seats.aero. Business, First & Premium Economy.</p>
           <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 6, marginTop: 20 }}>
-            {CARDS.slice(0, 7).map(c => <span key={c.id} style={{ padding: "4px 10px", borderRadius: 16, border: `1px solid ${c.color}40`, background: `${c.color}10`, color: c.color, fontSize: 10, fontWeight: 600 }}>{c.name}</span>)}
-            <span style={{ padding: "4px 10px", borderRadius: 16, border: "1px solid #1e293b", color: "#64748b", fontSize: 10, fontWeight: 600 }}>+{CARDS.length - 7} more</span>
+            {cards.slice(0, 7).map(c => <span key={c.id} style={{ padding: "4px 10px", borderRadius: 16, border: `1px solid ${c.color}40`, background: `${c.color}10`, color: c.color, fontSize: 10, fontWeight: 600 }}>{c.name}</span>)}
+            <span style={{ padding: "4px 10px", borderRadius: 16, border: "1px solid #1e293b", color: "#64748b", fontSize: 10, fontWeight: 600 }}>+{cards.length - 7} more</span>
           </div>
         </div>}
       </div>
