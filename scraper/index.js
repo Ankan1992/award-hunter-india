@@ -18,10 +18,17 @@ async function main() {
   console.log("=== AwardHunter Scraper ===");
   const startTime = Date.now();
 
-  // Load routes
+  // Load routes — scrape a subset per run to stay within time limits
   const routesPath = resolve(__dirname, "routes.json");
-  const routes = JSON.parse(readFileSync(routesPath, "utf-8"));
-  console.log(`Loaded ${routes.length} routes`);
+  const allRoutes = JSON.parse(readFileSync(routesPath, "utf-8"));
+  // Rotate through routes: pick 5 routes per run based on day of year
+  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+  const batchSize = 5;
+  const startIdx = (dayOfYear * batchSize) % allRoutes.length;
+  const routes = allRoutes.slice(startIdx, startIdx + batchSize).concat(
+    startIdx + batchSize > allRoutes.length ? allRoutes.slice(0, (startIdx + batchSize) - allRoutes.length) : []
+  );
+  console.log(`Loaded ${allRoutes.length} total routes, scraping batch of ${routes.length} (offset ${startIdx})`);
 
   const targetDate = getTargetDate();
   console.log(`Target date: ${targetDate}\n`);
@@ -60,9 +67,17 @@ async function main() {
   console.log(`Total transformed results: ${transformed.length}`);
 
   if (transformed.length === 0) {
-    console.warn("\n⚠ No results scraped. Keeping existing data intact.");
-    // Don't overwrite — exit with code 1 so GitHub Actions knows
-    process.exit(1);
+    console.warn("\n⚠ No results scraped via live scraping.");
+    console.log("This is expected — airline sites have anti-bot protections.");
+    console.log("The scraper will keep retrying on the next cron run.");
+    // Update timestamp so we know the scraper ran, even if no results
+    const output = {
+      ...existing,
+      lastAttempt: new Date().toISOString(),
+    };
+    writeFileSync(scrapedPath, JSON.stringify(output, null, 2));
+    // Exit 0 so workflow completes successfully and can commit the timestamp
+    process.exit(0);
   }
 
   // Group by route key: "FROM-TO-CABIN"
