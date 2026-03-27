@@ -17,6 +17,6 @@ export const VFT=new Set(["SIN","DXB","DOH","AUH","IST","KUL","BKK","CMB","HKG",
 
 export const IND=new Set(["DEL","BOM","BLR","MAA","HYD","CCU","COK","AMD","GOI","PNQ","JAI","TRV","GAU","LKO","ATQ","SXR","VNS","IXC","NAG"]);
 
-export const HUBS={DXB:"skywards",DOH:"avios_ba",AUH:"etihad_guest",SIN:"krisflyer",IST:"miles_smiles",BKK:"krisflyer",FRA:"krisflyer",AMS:"flying_blue",CDG:"flying_blue",ADD:"sheba_miles",HKG:"asia_miles",ICN:"krisflyer",KUL:"krisflyer",DPS:"krisflyer",NRT:"krisflyer",MUC:"krisflyer",ZRH:"krisflyer",LHR:"avios_ba",NBO:"krisflyer",CPH:"krisflyer",BOG:"lifemiles",YYZ:"aeroplan",YVR:"aeroplan"};
+export const HUBS={DXB:"skywards",DOH:"avios_ba",AUH:"etihad_guest",SIN:"krisflyer",IST:"miles_smiles",BKK:"krisflyer",FRA:"krisflyer",AMS:"flying_blue",CDG:"flying_blue",HKG:"asia_miles",ICN:"krisflyer",KUL:"krisflyer",DPS:"krisflyer",NRT:"krisflyer",MUC:"krisflyer",ZRH:"krisflyer",LHR:"avios_ba",NBO:"krisflyer",CPH:"krisflyer",BOG:"lifemiles",YYZ:"aeroplan",YVR:"aeroplan"};
 
 export const HUBS2={FRA:"lifemiles",MUC:"lifemiles",ZRH:"lifemiles",NRT:"aeroplan",ICN:"aeroplan",SIN:"lifemiles",BKK:"lifemiles",LHR:"aeroplan"};
