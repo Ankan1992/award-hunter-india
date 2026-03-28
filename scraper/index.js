@@ -7,11 +7,13 @@ import { transformResults } from "./transform.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-// Target date: ~30 days from now (typical award search window)
-function getTargetDate() {
-  const d = new Date();
-  d.setDate(d.getDate() + 30);
-  return d.toISOString().split("T")[0]; // YYYY-MM-DD
+// Target dates: 30 and 60 days out for broader availability coverage
+function getTargetDates() {
+  return [30, 60].map((offset) => {
+    const d = new Date();
+    d.setDate(d.getDate() + offset);
+    return d.toISOString().split("T")[0]; // YYYY-MM-DD
+  });
 }
 
 async function main() {
@@ -21,17 +23,18 @@ async function main() {
   // Load routes — scrape a subset per run to stay within time limits
   const routesPath = resolve(__dirname, "routes.json");
   const allRoutes = JSON.parse(readFileSync(routesPath, "utf-8"));
-  // Rotate through routes: pick 5 routes per run based on day of year
-  const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
-  const batchSize = 5;
-  const startIdx = (dayOfYear * batchSize) % allRoutes.length;
+  // Rotate through routes: pick 8 routes per run based on hours since epoch
+  // Using hours (not days) ensures each cron run gets a DIFFERENT batch
+  const hoursSinceEpoch = Math.floor(Date.now() / 3600000);
+  const batchSize = 8;
+  const startIdx = (hoursSinceEpoch * batchSize) % allRoutes.length;
   const routes = allRoutes.slice(startIdx, startIdx + batchSize).concat(
     startIdx + batchSize > allRoutes.length ? allRoutes.slice(0, (startIdx + batchSize) - allRoutes.length) : []
   );
   console.log(`Loaded ${allRoutes.length} total routes, scraping batch of ${routes.length} (offset ${startIdx})`);
 
-  const targetDate = getTargetDate();
-  console.log(`Target date: ${targetDate}\n`);
+  const targetDates = getTargetDates();
+  console.log(`Target dates: ${targetDates.join(", ")}\n`);
 
   // Load existing scraped data to merge
   const scrapedPath = resolve(__dirname, "../data/scraped.json");
@@ -42,24 +45,28 @@ async function main() {
 
   let allRawFlights = [];
 
-  // --- Aeroplan ---
-  console.log("[1/2] Scraping Aeroplan...");
-  try {
-    const aeroplanRaw = await scrapeAeroplan(routes, targetDate);
-    console.log(`  Aeroplan: ${aeroplanRaw.length} flights found\n`);
-    allRawFlights.push(...aeroplanRaw);
-  } catch (err) {
-    console.error(`  Aeroplan error: ${err.message}\n`);
-  }
+  for (const targetDate of targetDates) {
+    console.log(`\n--- Scraping for ${targetDate} ---`);
 
-  // --- LifeMiles ---
-  console.log("[2/2] Scraping LifeMiles...");
-  try {
-    const lifemilesRaw = await scrapeLifemiles(routes, targetDate);
-    console.log(`  LifeMiles: ${lifemilesRaw.length} flights found\n`);
-    allRawFlights.push(...lifemilesRaw);
-  } catch (err) {
-    console.error(`  LifeMiles error: ${err.message}\n`);
+    // --- Aeroplan ---
+    console.log("[1/2] Scraping Aeroplan...");
+    try {
+      const aeroplanRaw = await scrapeAeroplan(routes, targetDate);
+      console.log(`  Aeroplan: ${aeroplanRaw.length} flights found`);
+      allRawFlights.push(...aeroplanRaw);
+    } catch (err) {
+      console.error(`  Aeroplan error: ${err.message}`);
+    }
+
+    // --- LifeMiles ---
+    console.log("[2/2] Scraping LifeMiles...");
+    try {
+      const lifemilesRaw = await scrapeLifemiles(routes, targetDate);
+      console.log(`  LifeMiles: ${lifemilesRaw.length} flights found`);
+      allRawFlights.push(...lifemilesRaw);
+    } catch (err) {
+      console.error(`  LifeMiles error: ${err.message}`);
+    }
   }
 
   // Transform to app format

@@ -27,22 +27,24 @@ function getZone(code) {
 }
 
 // Published award charts: one-way Business class miles from South Asia
-// Sources: official airline award charts, PointsYeah, The Points Guy, FlyerTalk
+// Sources: official airline award charts, booking engines, FlyerTalk (updated Mar 2026)
+// KrisFlyer: post-Nov 2025 Saver rates; LifeMiles: post-Feb 2025 devaluation
+// Asia Miles: distance-based (approximated to zones); Aeroplan: dynamic (typical saver)
 const AWARD_CHART = {
   //                    SA      ME     SEA     EA      EU      NA      AF      OC      LA
-  krisflyer:          [12000, 41500, 36000, 58000, 82000, 92000, 62000, 78000, 92000],
+  krisflyer:          [17000, 52500, 43500, 62000, 86500, 96500, 65000, 82000, 96500],
   flying_blue:        [18000, 36000, 42000, 53000, 53000, 72000, 53000, 72000, 72000],
   avios_ba:           [13000, 27750, 40000, 60000, 60000,120000, 60000, 91000,120000],
   skywards:           [20000, 40000, 52500, 72500, 72500,102500, 72500,102500,102500],
   etihad_guest:       [18750, 25000, 36250, 51250, 62750, 88250, 62750, 88250, 88250],
   miles_smiles:       [ 7500, 20000, 25000, 30000, 45000, 45000, 45000, 45000, 45000],
-  asia_miles:         [10000, 30000, 25000, 35000, 65000, 85000, 65000, 75000, 85000],
+  asia_miles:         [20000, 45000, 40000, 58000, 88000,115000, 80000, 75000,115000],
   intermiles:         [15000, 30000, 40000, 55000, 80000,100000, 70000, 90000,100000],
   flying_returns:     [10000, 25000, 30000, 45000, 60000, 75000, 55000, 75000, 75000],
   club_vistara:       [10000, 25000, 30000, 45000, 60000, 75000, 55000, 75000, 75000],
   sheba_miles:        [15000, 30000, 40000, 55000, 65000, 85000, 35000, 85000, 85000],
-  lifemiles:          [10000, 25000, 30000, 45000, 63000, 63000, 50000, 60000, 63000],
-  aeroplan:           [10000, 30000, 37500, 47500, 60000, 70000, 55000, 75000, 70000],
+  lifemiles:          [15000, 38000, 48000, 63000, 78000, 87000, 63000, 75000, 87000],
+  aeroplan:           [15000, 42500, 57500, 62500, 77500, 90000, 70000, 87500, 90000],
 };
 const ZONE_IDX = { SA: 0, ME: 1, SEA: 2, EA: 3, EU: 4, NA: 5, AF: 6, OC: 7, LA: 8 };
 const CAB_MUL = { business: 1, first: 1.7, premium_economy: 0.6 };

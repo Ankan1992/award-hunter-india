@@ -2,8 +2,8 @@ name: Update Card Transfer Ratios
 
 on:
   schedule:
-    # Run weekly on Monday at 9 AM UTC
-    - cron: "0 9 * * 1"
+    # Run twice a week (Monday and Thursday at 9 AM UTC)
+    - cron: "0 9 * * 1,4"
   workflow_dispatch: # Allow manual trigger
 
 permissions:
