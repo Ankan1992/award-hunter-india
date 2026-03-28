@@ -3,6 +3,9 @@ import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { scrapeAeroplan } from "./aeroplan.js";
 import { scrapeLifemiles } from "./lifemiles.js";
+import { scrapeKrisflyer } from "./krisflyer.js";
+import { scrapeFlyingblue } from "./flyingblue.js";
+import { scrapeAvios } from "./avios.js";
 import { transformResults } from "./transform.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -48,24 +51,24 @@ async function main() {
   for (const targetDate of targetDates) {
     console.log(`\n--- Scraping for ${targetDate} ---`);
 
-    // --- Aeroplan ---
-    console.log("[1/2] Scraping Aeroplan...");
-    try {
-      const aeroplanRaw = await scrapeAeroplan(routes, targetDate);
-      console.log(`  Aeroplan: ${aeroplanRaw.length} flights found`);
-      allRawFlights.push(...aeroplanRaw);
-    } catch (err) {
-      console.error(`  Aeroplan error: ${err.message}`);
-    }
+    const scrapers = [
+      { name: "Aeroplan",    fn: scrapeAeroplan },
+      { name: "LifeMiles",   fn: scrapeLifemiles },
+      { name: "KrisFlyer",   fn: scrapeKrisflyer },
+      { name: "Flying Blue", fn: scrapeFlyingblue },
+      { name: "Avios (BA)",  fn: scrapeAvios },
+    ];
 
-    // --- LifeMiles ---
-    console.log("[2/2] Scraping LifeMiles...");
-    try {
-      const lifemilesRaw = await scrapeLifemiles(routes, targetDate);
-      console.log(`  LifeMiles: ${lifemilesRaw.length} flights found`);
-      allRawFlights.push(...lifemilesRaw);
-    } catch (err) {
-      console.error(`  LifeMiles error: ${err.message}`);
+    for (let i = 0; i < scrapers.length; i++) {
+      const { name, fn } = scrapers[i];
+      console.log(`[${i + 1}/${scrapers.length}] Scraping ${name}...`);
+      try {
+        const raw = await fn(routes, targetDate);
+        console.log(`  ${name}: ${raw.length} flights found`);
+        allRawFlights.push(...raw);
+      } catch (err) {
+        console.error(`  ${name} error: ${err.message}`);
+      }
     }
   }
 
