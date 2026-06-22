@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-06-18",
+  "lastUpdated": "2026-06-22",
   "cards": [
     {
       "id": "axis_atlas",
@@ -20,6 +20,11 @@
           "a": "Air India",
           "r": "5:4",
           "p": "flying_returns"
+        },
+        {
+          "a": "British Airways/Finnair",
+          "r": "5:4",
+          "p": "avios_ba"
         },
         {
           "a": "Ethiopian Airlines",
@@ -64,6 +69,11 @@
           "p": "flying_returns"
         },
         {
+          "a": "British Airways/Finnair",
+          "r": "5:4",
+          "p": "avios_ba"
+        },
+        {
           "a": "Ethiopian Airlines",
           "r": "5:4",
           "p": "sheba_miles"
@@ -104,6 +114,11 @@
           "a": "Air India",
           "r": "5:4",
           "p": "flying_returns"
+        },
+        {
+          "a": "British Airways/Finnair",
+          "r": "5:4",
+          "p": "avios_ba"
         },
         {
           "a": "Ethiopian Airlines",
