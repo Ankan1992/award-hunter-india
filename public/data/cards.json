@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-08-13",
+  "lastUpdated": "2026-08-17",
   "cards": [
     {
       "id": "axis_atlas",
@@ -22,7 +22,7 @@
           "p": "flying_returns"
         },
         {
-          "a": "British Airways/Finnair",
+          "a": "British Airways/Finnair/Qatar",
           "r": "5:4",
           "p": "avios_ba"
         },
@@ -69,7 +69,7 @@
           "p": "flying_returns"
         },
         {
-          "a": "British Airways/Finnair",
+          "a": "British Airways/Finnair/Qatar",
           "r": "5:4",
           "p": "avios_ba"
         },
@@ -116,7 +116,7 @@
           "p": "flying_returns"
         },
         {
-          "a": "British Airways/Finnair",
+          "a": "British Airways/Finnair/Qatar",
           "r": "5:4",
           "p": "avios_ba"
         },
