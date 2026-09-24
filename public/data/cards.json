@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-09-21",
+  "lastUpdated": "2026-09-24",
   "cards": [
     {
       "id": "axis_atlas",
@@ -22,9 +22,14 @@
           "p": "flying_returns"
         },
         {
-          "a": "British Airways/Finnair/Qatar",
+          "a": "The British Airways Club",
           "r": "5:4",
           "p": "avios_ba"
+        },
+        {
+          "a": "Cathay",
+          "r": "5:4",
+          "p": "asia_miles"
         },
         {
           "a": "Ethiopian Airlines",
@@ -69,9 +74,14 @@
           "p": "flying_returns"
         },
         {
-          "a": "British Airways/Finnair/Qatar",
+          "a": "The British Airways Club",
           "r": "5:4",
           "p": "avios_ba"
+        },
+        {
+          "a": "Cathay",
+          "r": "5:4",
+          "p": "asia_miles"
         },
         {
           "a": "Ethiopian Airlines",
@@ -116,9 +126,14 @@
           "p": "flying_returns"
         },
         {
-          "a": "British Airways/Finnair/Qatar",
+          "a": "The British Airways Club",
           "r": "5:4",
           "p": "avios_ba"
+        },
+        {
+          "a": "Cathay",
+          "r": "5:4",
+          "p": "asia_miles"
         },
         {
           "a": "Ethiopian Airlines",
